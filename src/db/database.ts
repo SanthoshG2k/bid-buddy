@@ -2,6 +2,8 @@ import { env } from "@/env";
 import * as schema from "./schema";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js"; 
+
 
 declare global {
     //eslint-disable-next-line no-var --only var works here
@@ -13,13 +15,13 @@ let pg: ReturnType<typeof postgres>;
 
 if (env.NODE_ENV === "production") {
     pg = postgres(env.DATABASE_URL);
-    database = drizzle(pg. { schema });
+    database = drizzle(pg, { schema });
 } else {
     if (!global.database) {
         pg = postgres(env.DATABASE_URL);
-        global.database = drizzle(pg. { schema });
+        global.database = drizzle(pg, { schema });
     }
     database = global.database;
 }
 
-export { database, pg }:
+export { database, pg };
