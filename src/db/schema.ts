@@ -68,7 +68,8 @@ export const bids = pgTable("bb_bids",{
 export const items = pgTable("bb_item",{
     id: serial("id").primaryKey(),
     userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     name:text("name").notNull(),
+    startingPrice: integer("startingPrice").notNull().default(0),
 });
