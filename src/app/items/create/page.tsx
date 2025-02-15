@@ -6,11 +6,12 @@ import {
   createItemAction, 
   createUploadUrlAction 
 } from "./actions";
+import { pageTitleStyles } from "@/styles";
 
 export default function CreatePage() {
   return (
-    <main className="container mx-auto py-12 space-y-8">
-      <h1 className="text-4xl font-bold nb-8">Post an Item</h1>
+    <main className="space-y-8">
+      <h1 className={pageTitleStyles}>Post an Item</h1>
 
       <form
       className="flex flex-col border p-8 rounded-xl space-y-4 max-w-lg"
