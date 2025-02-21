@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { auth } from "@/auth";
 import { pageTitleStyles } from "@/styles";
 import { getImageUrl } from "@/util/files";
 import { formatDistance } from 'date-fns'
 import Link from "next/link";
 import Image from "next/image";
 import { formatToRupees } from "@/util/currency";
-import { createBidAction } from "./actions";
+import { createBidAction } from "@/app/items/[itemId]/actions";
 import { getBidsForItem } from "@/data-access/bids";
 import { getItem } from "@/data-access/items";
 
@@ -21,6 +22,7 @@ function formatTimestamp(timestamp: Date) {
 
 export default async function ItemPage({ params }: ItemPageProps) {
   const itemId = params.itemId;
+  const session = await auth();
   const item = await getItem(parseInt(itemId));
   
   if (!item) {
@@ -42,6 +44,8 @@ export default async function ItemPage({ params }: ItemPageProps) {
  const allbids = await getBidsForItem(item.id);
  
  const hasBids = allbids.length > 0;
+
+ const canPlaceBid = session && item.userId !== session.user.id;
 
   return (
     <main className="space-y-8">
@@ -84,11 +88,13 @@ export default async function ItemPage({ params }: ItemPageProps) {
         <div className="space-y-4 flex-1">
           <div className="flex justify-between">
           <h2 className="text-2xl font-bold">Current Bids</h2>
+          {canPlaceBid && (
           <form action = {createBidAction.bind(null, item.id)}>         
             <Button>Place a Bid</Button>
           </form>
+          )}
         </div>
-{hasBids ? (
+        {hasBids ? (
           <ul className="space-y-4">
             {allbids.map((bid) => (     
               <li key={bid.id} className="bg-gray-100 rounded-xl p-8">   
@@ -107,11 +113,14 @@ export default async function ItemPage({ params }: ItemPageProps) {
             <Image src="/package.svg"
               width={200}
               height={200}
-              alt="package"/>
+              alt="package"
+              />
           <h2 className="text-2xl font-bold">No bids yet</h2>
+          {canPlaceBid && (
           <form action = {createBidAction.bind(null, item.id)}>         
             <Button>Place a Bid</Button>
           </form>
+          )}
           </div>          
           )}
         </div>
